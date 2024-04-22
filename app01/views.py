@@ -1,25 +1,50 @@
-from django.shortcuts import render
 import json
-import string
-from datetime import datetime
-from django.http import JsonResponse
-from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
-
-from .models import VerifyCode, User, Ban, Admin
 import random
-from django.views.decorators.csrf import csrf_exempt
+import string
+import jwt
+from django.conf import settings
+from datetime import datetime, timedelta
+
+from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from rest_framework.permissions import BasePermission
+
+from .serializers import UserSerializer, BanSerializer
+from .models import User, VerifyCode, Ban
 
 
-@csrf_exempt
-def sendverifycode(request):
-    if request.method == 'POST':
+# 自定义认证方法
+# 自定义权限方法
+class UserPermission(BasePermission):
+    def has_permission(self, request, view):
+        permission_dict = settings.PERMISSIONS[request.user.get('role')]
+        print("role:", request.user.get('role'))
+        url_name = request.resolver_match.url_name
+        method = request.method
+        method_list = permission_dict.get(url_name)
+        if not method_list:
+            return False
+        if method in method_list:
+            return True
+        return False
+        # 验证用户是否登录
+
+    def has_object_permission(self, request, view, obj):
+        return True
+
+
+class SendVerifyCode(APIView):
+    authentication_classes = []
+
+    def post(self, request):
         phone_number = request.POST.get('phone')
         find_number = User.objects.filter(phone=phone_number).first()
         find_code = VerifyCode.objects.filter(phone=phone_number).first()
         if find_number:
             # 如果该手机号码已存在用户，则返回错误响应
-            return JsonResponse({'code': 1, 'message': '此电话号码已存在，不要重复注册'})
+            return Response({'code': 1, 'message': '此电话号码已存在，不要重复注册'})
 
         else:
             code = ''.join(random.choices('0123456789', k=6))
@@ -33,28 +58,51 @@ def sendverifycode(request):
                 VerifyCode.objects.create(phone=phone_number, code=code)
 
             # 返回成功响应
-            return JsonResponse({'code': 0, 'message': '验证码发送成功'})
-    else:
-        # 如果请求方法不是 POST，返回错误响应
-        return JsonResponse({'code': 1, 'message': 'Only POST requests are allowed.'})
+            return Response({'code': 0, 'message': '验证码发送成功'})
 
 
-@csrf_exempt
-def register(request):
-    if request.method == 'POST':
+class LoginView(APIView):
+    authentication_classes = []
+
+    def post(self, request):
         # 获取请求体中的数据
         data = json.loads(request.body)
         phone_number = data.get('phone')
-        code = data.get('code')
         password = data.get('password')
+        find_user = User.objects.filter(phone=phone_number, password=password).first()
+        user_id = find_user.id
+        user_name = find_user.name
+        if not find_user:
+            # 如果用户不存在或密码错误，返回错误响应
+            return Response({'code': 1, 'message': '用户不存在或密码错误'})
+        salt = settings.SECRET_KEY
+        payload = {
+            'user_id': user_id,
+            'name': user_name,
+            'role': find_user.role,
+            'exp': datetime.utcnow() + timedelta(minutes=15)
+        }
+        token = jwt.encode(payload=payload, key=salt, algorithm='HS256')
+        # 如果用户存在且密码正确，则返回成功响应
+        return Response(
+            {'code': 0, 'message': '登录成功', 'user_phone': find_user.phone, "user_name": user_name,
+             "token": token})
+
+
+class RegisterView(APIView):
+    authentication_classes = []
+
+    def post(self, request):
+        # 获取请求体中的数据
+        phone_number = request.data.get('phone')
+        code = request.data.get('code')
         time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        print(phone_number, code, password, time)
 
         # 验证验证码
         find_code = VerifyCode.objects.filter(phone=phone_number, code=code).first()
         if not find_code:
             # 如果验证码错误，返回错误响应
-            return JsonResponse({'code': 1, 'message': '验证码错误'})
+            return Response({'code': 1, 'message': '验证码错误'})
 
         # 如果验证码正确，则创建用户并返回成功响应
         # 此处省略了用户创建代码
@@ -63,130 +111,81 @@ def register(request):
             return ''.join(random.choice(characters) for i in range(length))
 
         name = generate_random_string(8)
-        User.objects.create(phone=phone_number, password=password, time=time, name=name)
-        return JsonResponse({'code': 0, 'message': '用户创建成功'})
-    else:
-        # 如果请求方法不是 POST，返回错误响应
-        return JsonResponse({'code': 1, 'message': 'Only POST requests are allowed.'})
+        data = request.data
+        data['name'] = name
+        data['time'] = time
+        serializer = UserSerializer(data=data)
+        if serializer.is_valid():
+            # 如果数据有效，保存到数据库
+            serializer.save()
+            return Response({'code': 0, 'message': '用户创建成功'})
+        else:
+            # 如果数据无效，返回错误响应
+            return Response({'code': 1, 'message': '用户创建失败', 'errors': serializer.errors})
 
 
-@csrf_exempt
-def login(request):
-    if request.method == 'POST':
-        # 获取请求体中的数据
-        data = json.loads(request.body)
-        phone_number = data.get('phone')
-        password = data.get('password')
-        find_user = User.objects.filter(phone=phone_number, password=password).first()
-        if not find_user:
-            # 如果用户不存在或密码错误，返回错误响应
-            return JsonResponse({'code': 1, 'message': '用户不存在或密码错误'})
-        refresh = RefreshToken.for_user(find_user)
-        # 如果用户存在且密码正确，则返回成功响应
-        return JsonResponse(
-            {'code': 0, 'message': '登录成功', 'user_phone': find_user.phone, "token": str(refresh)})
+class UserInfoView(APIView):
+    permission_classes = [UserPermission]
 
-
-@csrf_exempt
-def userlist(request):
-    if request.method == 'GET':
-        # 获取请求体中的数据
+    # 获取用户列表
+    def get(self, request):
         page = int(request.GET.get('page'))
         users = User.objects.all().order_by('time')[(page - 1) * 10:page * 10]
         count = User.objects.all().count()
         print(count)
-        data = []
-        for user in users:
-            data.append({'phone': user.phone, 'name': user.name, 'time': user.time, "statecode": user.stateCode})
-        return JsonResponse({'code': 0, 'data': data, 'count': count})
-    elif request.method == 'POST':
-        data = json.loads(request.body)
-        name = data.get('name')
-        User.objects.filter(name=name).update(stateCode="1")
-        phone = User.objects.filter(name=name).first().phone
-        Ban.objects.create(phone=phone, name=name, reason=data.get('reason'),
-                           time=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        return JsonResponse({'code': 0, 'message': '用户已被封禁'})
+        serializer = UserSerializer(users, many=True)
+
+        return Response({'code': 0, 'data': serializer.data, 'count': count})
+
+    # 设置管理员
+    def patch(self, request):
+        data = request.data
+        phone = data.get('phone')
+        User.objects.filter(name=phone).update(stateCode="2", role="admin")
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print(time)
+        return Response({'code': 0, 'message': '用户已设置为管理员'})
+
+    # 取消管理员
+    def post(self, request):
+        phone = request.data.get('phone')
+        User.objects.filter(name=phone).update(stateCode="0", role="user")
+        return JsonResponse({'code': 0, 'message': '用户已设置为普通用户'})
 
 
-@csrf_exempt
-def banlist(request):
-    if request.method == 'GET':
+class BanlistView(APIView):
+    # 获取被禁用户列表
+    def get(self, request):
         page = int(request.GET.get('page'))
         bans = Ban.objects.all().order_by('time')[(page - 1) * 10:page * 10]
         count = Ban.objects.all().count()
         print("bancount:", count)
-        data = []
-        for ban in bans:
-            data.append({'phone': ban.phone, 'name': ban.name, 'reason': ban.reason, 'time': ban.time})
-        return JsonResponse({'code': 0, 'data': data, 'count': count})
-    elif request.method == 'POST':
-        data = json.loads(request.body)
-        name = data.get('name')
-        print(name)
-        User.objects.filter(name=name).update(stateCode="0")
-        Ban.objects.filter(name=name).delete()
-        return JsonResponse({'code': 0, 'message': '封禁已解除'})
+        serializer = BanSerializer(bans, many=True)
+        return Response({'code': 0, 'data': serializer.data, 'count': count})
+
+    # 封禁用户
+    def post(self, request):
+        phone = request.data.get('phone')
+        print(phone)
+        User.objects.filter(phone=phone).update(stateCode="1")
+        name = User.objects.filter(phone=phone).first().name
+        Ban.objects.create(phone=phone, name=name, reason=request.data.get('reason'),
+                           time=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        return Response({'code': 0, 'message': '用户已被封禁'})
+
+    # 解除封禁
+    def delete(self, request):
+        phone = request.GET.get('phone')
+        User.objects.filter(phone=phone).update(stateCode="0")
+        Ban.objects.filter(phone=phone).delete()
+        return Response({'code': 0, 'message': '封禁已解除'})
 
 
-@csrf_exempt
-def search(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        name = data.get('name')
-        print(name)
+class SearchView(APIView):
+    def get(self, request):
+        name = request.GET.get('name')
         users = User.objects.filter(name=name)
         count = users.count()
         print("usercount:", count)
-        data = []
-        for user in users:
-            data.append({'phone': user.phone, 'name': user.name, 'time': user.time, "statecode": user.stateCode})
-        return JsonResponse({'code': 0, 'data': data, "count": count})
-
-
-@csrf_exempt
-def adminsearch(request):
-    if request.method == 'POST':
-        name = json.loads(request.body).get('name')
-        users = Admin.objects.filter(name=name)
-        count = users.count()
-        print("admincount:", count)
-        data = []
-        for user in users:
-            data.append({'phone': user.phone, 'name': user.name, 'time': user.time})
-        return JsonResponse({'code': 0, 'data': data, "count": count})
-
-
-@csrf_exempt
-def grow(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        name = data.get('name')
-        User.objects.filter(name=name).update(stateCode="2")
-        phone = User.objects.filter(name=name).first().phone
-        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        print(time)
-        Admin.objects.create(phone=phone, name=name, time=time)
-        return JsonResponse({'code': 0, 'message': '用户已设置为管理员'})
-
-
-@csrf_exempt
-def admin(request):
-    if request.method == 'GET':
-        page = int(request.GET.get('page'))
-        users = Admin.objects.filter().all().order_by('time')[(page - 1) * 10:page * 10]
-        count = Admin.objects.filter().all().count()
-        print("admincount:", count)
-        data = []
-        for user in users:
-            data.append({'phone': user.phone, 'name': user.name, 'time': user.time})
-        return JsonResponse({'code': 0, 'data': data, 'count': count})
-    elif request.method == 'POST':
-        data = json.loads(request.body)
-        name = data.get('name')
-        User.objects.filter(name=name).update(stateCode="0")
-        print(name)
-        Admin.objects.filter(name=name).delete()
-        return JsonResponse({'code': 0, 'message': '管理员已被删除'})
-
-# Create your views here.
+        serializer = UserSerializer(users, many=True)
+        return Response({'code': 0, 'data': serializer.data, "count": count})

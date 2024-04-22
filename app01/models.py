@@ -1,35 +1,24 @@
 from django.db import models
 
+
 # Create your models here.
 class User(models.Model):
     stateCode = models.CharField(max_length=1, default='0')
-    name = models.CharField(max_length=15)
-    password = models.CharField(max_length=50)
+    name = models.CharField(max_length=8)
+    password = models.CharField(max_length=15)
     phone = models.CharField(max_length=11)
     time = models.CharField(max_length=50)
-
-
-
-
-
-
-class Admin(models.Model):
-    name = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
-    phone = models.CharField(max_length=11)
-    time = models.CharField(max_length=50)
-
-
-
-class SuperAdmin(models.Model):
-    name = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
-    phone = models.CharField(max_length=11)
+    role_choices = (
+        ('user', '普通用户'),
+        ('admin', '管理员'),
+        ('root', '超级管理员')
+    )
+    role = models.CharField(max_length=16, choices=role_choices, default='user')
 
 
 class Ban(models.Model):
-    phone = models.CharField(max_length=15)
-    name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=11)
+    name = models.CharField(max_length=8)
     reason = models.CharField(max_length=100)
     time = models.CharField(max_length=50)
 
