@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44c22e3c-26c5-40ec-bf54-9621cc9251f4" name="更改" comment="token第一阶段">
+    <list default="true" id="44c22e3c-26c5-40ec-bf54-9621cc9251f4" name="更改" comment="jwt">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app01/extensions/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/app01/extensions/auth.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app01/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app01/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app01/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/app01/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app01/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app01/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cs/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/cs/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cs/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/cs/urls.py" afterDir="false" />
@@ -51,10 +53,16 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\pycharmProject\cs\app01\static\media\img" />
+      <recent name="D:\pycharmProject\cs\app01\static\media" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="cs" type="Python.DjangoServer" factoryName="Django server">
       <module name="cs" />
@@ -114,7 +122,13 @@
       <workItem from="1713513758345" duration="2414000" />
       <workItem from="1713581274491" duration="10011000" />
       <workItem from="1713666666546" duration="609000" />
-      <workItem from="1713752152125" duration="7260000" />
+      <workItem from="1713752152125" duration="8992000" />
+      <workItem from="1713835457220" duration="4331000" />
+      <workItem from="1713858935271" duration="5522000" />
+      <workItem from="1713868996517" duration="896000" />
+      <workItem from="1713924209550" duration="16658000" />
+      <workItem from="1714010476270" duration="437000" />
+      <workItem from="1714010926544" duration="6978000" />
     </task>
     <task id="LOCAL-00001" summary="token第一阶段">
       <option name="closed" value="true" />
@@ -132,7 +146,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713092580026</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="jwt">
+      <option name="closed" value="true" />
+      <created>1713780021727</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1713780021727</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,6 +173,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="token第一阶段" />
-    <option name="LAST_COMMIT_MESSAGE" value="token第一阶段" />
+    <MESSAGE value="jwt" />
+    <option name="LAST_COMMIT_MESSAGE" value="jwt" />
   </component>
 </project>

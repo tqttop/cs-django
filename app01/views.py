@@ -1,4 +1,5 @@
-import json
+import base64
+import mimetypes
 import random
 import string
 import jwt
@@ -9,34 +10,15 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from rest_framework.permissions import BasePermission
-
 from .serializers import UserSerializer, BanSerializer
 from .models import User, VerifyCode, Ban
 
 
-# 自定义认证方法
 # 自定义权限方法
-class UserPermission(BasePermission):
-    def has_permission(self, request, view):
-        permission_dict = settings.PERMISSIONS[request.user.get('role')]
-        print("role:", request.user.get('role'))
-        url_name = request.resolver_match.url_name
-        method = request.method
-        method_list = permission_dict.get(url_name)
-        if not method_list:
-            return False
-        if method in method_list:
-            return True
-        return False
-        # 验证用户是否登录
-
-    def has_object_permission(self, request, view, obj):
-        return True
-
 
 class SendVerifyCode(APIView):
     authentication_classes = []
+    permission_classes = []
 
     def post(self, request):
         phone_number = request.POST.get('phone')
@@ -63,34 +45,39 @@ class SendVerifyCode(APIView):
 
 class LoginView(APIView):
     authentication_classes = []
+    permission_classes = []
 
     def post(self, request):
         # 获取请求体中的数据
-        data = json.loads(request.body)
+        data = request.data
         phone_number = data.get('phone')
         password = data.get('password')
         find_user = User.objects.filter(phone=phone_number, password=password).first()
-        user_id = find_user.id
-        user_name = find_user.name
         if not find_user:
             # 如果用户不存在或密码错误，返回错误响应
             return Response({'code': 1, 'message': '用户不存在或密码错误'})
+        user_id = find_user.id
+        user_name = find_user.name
+        role = find_user.role
         salt = settings.SECRET_KEY
         payload = {
             'user_id': user_id,
-            'name': user_name,
-            'role': find_user.role,
-            'exp': datetime.utcnow() + timedelta(minutes=15)
+            'phone': phone_number,
+            'role': role,
+            'exp': datetime.utcnow() + timedelta(days=1)
         }
+        img = find_user.img.url
+        print(img)
         token = jwt.encode(payload=payload, key=salt, algorithm='HS256')
         # 如果用户存在且密码正确，则返回成功响应
         return Response(
-            {'code': 0, 'message': '登录成功', 'user_phone': find_user.phone, "user_name": user_name,
-             "token": token})
+            {'code': 0, 'message': '登录成功', 'name': user_name, 'phone': find_user.phone, "token": token,
+             'role': role, 'id': user_id, "img": img})
 
 
 class RegisterView(APIView):
     authentication_classes = []
+    permission_classes = []
 
     def post(self, request):
         # 获取请求体中的数据
@@ -124,8 +111,7 @@ class RegisterView(APIView):
             return Response({'code': 1, 'message': '用户创建失败', 'errors': serializer.errors})
 
 
-class UserInfoView(APIView):
-    permission_classes = [UserPermission]
+class UserListView(APIView):
 
     # 获取用户列表
     def get(self, request):
@@ -141,7 +127,7 @@ class UserInfoView(APIView):
     def patch(self, request):
         data = request.data
         phone = data.get('phone')
-        User.objects.filter(name=phone).update(stateCode="2", role="admin")
+        User.objects.filter(phone=phone).update(stateCode="2", role="admin")
         time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print(time)
         return Response({'code': 0, 'message': '用户已设置为管理员'})
@@ -149,7 +135,7 @@ class UserInfoView(APIView):
     # 取消管理员
     def post(self, request):
         phone = request.data.get('phone')
-        User.objects.filter(name=phone).update(stateCode="0", role="user")
+        User.objects.filter(phone=phone).update(stateCode="0", role="user")
         return JsonResponse({'code': 0, 'message': '用户已设置为普通用户'})
 
 
@@ -189,3 +175,42 @@ class SearchView(APIView):
         print("usercount:", count)
         serializer = UserSerializer(users, many=True)
         return Response({'code': 0, 'data': serializer.data, "count": count})
+
+
+class ChangeNameView(APIView):
+    permission_classes = []
+
+    def patch(self, request, *args, **kwargs):
+        data = request.data
+        phone = request.user.get('phone')
+        name = data.get('name')
+        if User.objects.filter(name=name):
+            return Response({'code': 1, 'message': '已存在该用户名，请使用其他用户名'})
+        else:
+            User.objects.filter(phone=phone).update(name=name)
+            return Response({'code': 0, 'message': '修改成功'})
+
+
+class ChangePasswordView(APIView):
+    permission_classes = []
+
+    def patch(self, request, *args, **kwargs):
+        data = request.data
+        phone = request.user.get('phone')
+        User.objects.filter(phone=phone).update(password=data.get('password'))
+        return Response({'code': 0, 'message': '修改成功'})
+
+
+class UploadImgView(APIView):
+    permission_classes = []
+
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST' and 'file' in request.FILES:
+            uploaded_file = request.FILES['file']
+            # 创建 Avatar 对象并保存到数据库
+            user = User.objects.get(phone=request.user.get('phone'))
+            user.img.delete()
+            user.img.save(uploaded_file.name, uploaded_file)
+            return Response({'code': 0, 'message': '文件上传成功！'})
+        else:
+            return Response({'code': 1, 'message': '未收到有效的文件！'})

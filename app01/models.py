@@ -3,6 +3,7 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
+    img = models.ImageField(upload_to='img/', default='default.jpg')
     stateCode = models.CharField(max_length=1, default='0')
     name = models.CharField(max_length=8)
     password = models.CharField(max_length=15)

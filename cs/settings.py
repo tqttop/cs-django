@@ -136,9 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['app01.extensions.auth.UserAuthentication'],
 
-    'DEFAULT_PERMISSION_CLASSES': (
-        # 'rest_framework.permissions.IsAuthenticated',
-    ),
+    'DEFAULT_PERMISSION_CLASSES': ['app01.extensions.auth.UserPermission']
 }
 
 # SIMPLE_JWT = {
@@ -190,16 +188,23 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'app01/static/media/')
 
 PERMISSIONS = {
     "user": {
 
     },
     "admin": {
-        "userList": ["GET", "POST"]
+        "userList": ["GET"],
+        "banList": ["GET，POST，DELETE"],
+        "search": ["GET"]
     },
 
     "root": {
+        "userList": ["GET", "POST", "PATCH"],
+        "banList": ["GET", "POST", "DELETE"],
+        "search": ["GET"]
 
     },
 
