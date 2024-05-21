@@ -113,6 +113,7 @@ DATABASES = {
     }
 }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -193,15 +194,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'app01/static/media/')
 
 PERMISSIONS = {
     "user": {
+       "document": ["GET", ],
 
     },
     "admin": {
+        "document": ["GET", "DELETE"],
         "userList": ["GET"],
         "banList": ["GET，POST，DELETE"],
         "search": ["GET"]
     },
 
     "root": {
+        "document": ["GET", "DELETE"],
         "userList": ["GET", "POST", "PATCH"],
         "banList": ["GET", "POST", "DELETE"],
         "search": ["GET"]
