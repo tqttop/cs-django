@@ -16,6 +16,7 @@ urlpatterns = [
                   path('documents/', views.DocumentView.as_view(), name='documents'),
                   path('videos/<str:pk>/', views.getVideos),
                   path('ArticleDetail/', views.ArticleDetailView.as_view(), name='ArticleDetail'),
+                  path('ArticleLike/',views.ArticleLikeView.as_view(),name='ArticleLike'),
                   path('Comment/', views.CommentView.as_view(), name='Comment'),
                   path('Article/', views.ArticleView.as_view(), name='Article'),
 

@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .serializers import UserSerializer, BanSerializer, DocumentsSerializer, ArticlesSerializer, CommentsSerializer
-from .models import User1, VerifyCode, Ban, Document, Article, Comment
+from .models import User1, VerifyCode, Ban, Document, Article, Comment, Like
 
 
 # 自定义权限方法
@@ -275,6 +275,40 @@ class ArticleView(APIView):
         return Response({'code': 0, 'message': '发布成功'})
 
 
+class ArticleLikeView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        data = request.data
+        article_id = data.get('article_id')
+        user_id = data.get('user_id')
+        good = Article.objects.filter(Article_id=article_id).first().goodCount
+        Article.objects.filter(Article_id=article_id).update(goodCount=good + 1)
+        Like.objects.create(user_id=user_id, article_id=article_id)
+        return Response({'code': 0, 'message': '点赞成功'})
+
+    def patch(self, request):
+        article_id = request.data.get('article_id')
+        user_id = request.data.get('user_id')
+        good = Article.objects.filter(Article_id=article_id).first().goodCount
+        Article.objects.filter(Article_id=article_id).update(goodCount=good - 1)
+        Like.objects.filter(user_id=user_id, article_id=article_id).delete()
+        return Response({'code': 0, 'message': '取消点赞成功'})
+
+    def get(self, request):
+        article_id = request.GET.get('article_id')
+        print("getarticle_id", article_id)
+        user_id = request.GET.get('user_id')
+        print("getuser_id", user_id)
+        user = Like.objects.filter(user_id=user_id).all()
+        likes = user.filter(article_id=article_id).count()
+        print("likes", likes)
+        if likes == 0:
+            return Response({'code': 0, 'isLiked': 0})
+        else:
+            return Response({'code': 0, 'isLiked': 1})
+
+
 class ArticleDetailView(APIView):
     permission_classes = []
     authentication_classes = []
@@ -306,6 +340,7 @@ class CommentView(APIView):
         for comment in comments:
             user = User1.objects.filter(id=comment.user_id).first().name
             img = User1.objects.filter(id=comment.user_id).first().img.url
+            print("img", img)
             data.append({'id': comment.id, 'content': comment.content, 'time': comment.time, 'user': user, 'img': img})
         print(data)
 

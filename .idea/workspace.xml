@@ -4,28 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44c22e3c-26c5-40ec-bf54-9621cc9251f4" name="更改" comment="头像上传与展示">
+    <list default="true" id="44c22e3c-26c5-40ec-bf54-9621cc9251f4" name="更改" comment="结束">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0002_delete_admin_delete_superadmin_user_role.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0003_alter_ban_name_alter_ban_phone_alter_user_name_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0004_alter_ban_name_alter_user_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0005_alter_ban_name_alter_user_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0006_alter_ban_name_alter_user_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0007_alter_ban_name_alter_user_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0008_alter_ban_name_alter_user_name.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0009_user_avatar.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0010_remove_user_avatar.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0011_user_avatar.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0012_remove_user_avatar.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0013_user_img.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/0014_alter_user_img.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/migrations/__init__.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app01/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app01/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/app01/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/static/media/img/屏幕截图_2024-04-24_164111.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app01/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app01/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/cs/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cs/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/cs/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -165,7 +147,10 @@
       <workItem from="1716024950549" duration="3354000" />
       <workItem from="1716186019006" duration="16798000" />
       <workItem from="1716261857374" duration="7991000" />
-      <workItem from="1716288697504" duration="4973000" />
+      <workItem from="1716288697504" duration="5051000" />
+      <workItem from="1716380667074" duration="596000" />
+      <workItem from="1716462629574" duration="1906000" />
+      <workItem from="1716523272905" duration="4515000" />
     </task>
     <task id="LOCAL-00001" summary="token第一阶段">
       <option name="closed" value="true" />
@@ -199,7 +184,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714031485592</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="结束">
+      <option name="closed" value="true" />
+      <created>1716293832807</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1716293832807</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -220,6 +213,7 @@
     <MESSAGE value="token第一阶段" />
     <MESSAGE value="jwt" />
     <MESSAGE value="头像上传与展示" />
-    <option name="LAST_COMMIT_MESSAGE" value="头像上传与展示" />
+    <MESSAGE value="结束" />
+    <option name="LAST_COMMIT_MESSAGE" value="结束" />
   </component>
 </project>

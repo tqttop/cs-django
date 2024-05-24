@@ -55,9 +55,6 @@ class Like(models.Model):
     user = models.ForeignKey(verbose_name='用户', to=User1, on_delete=models.CASCADE)
     article = models.ForeignKey(verbose_name='文章', to=Article, on_delete=models.CASCADE)
 
-    class Meta:
-        unique_together = ('user', 'article')  # 用户对同一帖子只能点赞一次
-
 
 class Comment(models.Model):
     time = models.DateTimeField(verbose_name='评论时间', default=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
