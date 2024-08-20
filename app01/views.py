@@ -68,7 +68,6 @@ class LoginView(APIView):
             'exp': datetime.utcnow() + timedelta(days=1)
         }
         img = find_user.img.url
-        print(img)
         token = jwt.encode(payload=payload, key=salt, algorithm='HS256')
         # 如果用户存在且密码正确，则返回成功响应
         return Response(
@@ -244,6 +243,7 @@ def getVideos(request, pk):
 
 class ArticleView(APIView):
     permission_classes = []
+    authentication_classes = []
 
     def get(self, request):
         articles = Article.objects.all()

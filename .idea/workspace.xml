@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44c22e3c-26c5-40ec-bf54-9621cc9251f4" name="更改" comment="结束">
+    <list default="true" id="44c22e3c-26c5-40ec-bf54-9621cc9251f4" name="更改" comment="点赞">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app01/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app01/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app01/static/media/img/default.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app01/static/media/videos/default.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app01/static/media/videos/巴西气候变化虚拟现实博物馆 沉浸式体验节能减排.mp4" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app01/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app01/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/cs/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/cs/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +52,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -150,7 +152,34 @@
       <workItem from="1716288697504" duration="5051000" />
       <workItem from="1716380667074" duration="596000" />
       <workItem from="1716462629574" duration="1906000" />
-      <workItem from="1716523272905" duration="4515000" />
+      <workItem from="1716523272905" duration="5104000" />
+      <workItem from="1716529932243" duration="8000" />
+      <workItem from="1716535625441" duration="5269000" />
+      <workItem from="1716616337465" duration="11291000" />
+      <workItem from="1716647869084" duration="475000" />
+      <workItem from="1716649159220" duration="1020000" />
+      <workItem from="1716790125581" duration="603000" />
+      <workItem from="1716797996468" duration="499000" />
+      <workItem from="1716799374532" duration="403000" />
+      <workItem from="1717041568037" duration="14000" />
+      <workItem from="1717042009831" duration="103000" />
+      <workItem from="1717315128351" duration="1312000" />
+      <workItem from="1717575011193" duration="1190000" />
+      <workItem from="1717596971027" duration="203000" />
+      <workItem from="1717674021945" duration="5076000" />
+      <workItem from="1717685106631" duration="1277000" />
+      <workItem from="1717720324930" duration="635000" />
+      <workItem from="1717721883859" duration="202000" />
+      <workItem from="1717735971352" duration="571000" />
+      <workItem from="1717737334889" duration="517000" />
+      <workItem from="1718277577746" duration="36000" />
+      <workItem from="1719734290288" duration="6000" />
+      <workItem from="1719734844456" duration="50000" />
+      <workItem from="1722418954656" duration="830000" />
+      <workItem from="1722559803945" duration="3160000" />
+      <workItem from="1722662085049" duration="3000" />
+      <workItem from="1722908205393" duration="810000" />
+      <workItem from="1723718223888" duration="6000" />
     </task>
     <task id="LOCAL-00001" summary="token第一阶段">
       <option name="closed" value="true" />
@@ -192,7 +221,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716293832807</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="点赞">
+      <option name="closed" value="true" />
+      <created>1716528533043</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1716528533043</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,6 +251,7 @@
     <MESSAGE value="jwt" />
     <MESSAGE value="头像上传与展示" />
     <MESSAGE value="结束" />
-    <option name="LAST_COMMIT_MESSAGE" value="结束" />
+    <MESSAGE value="点赞" />
+    <option name="LAST_COMMIT_MESSAGE" value="点赞" />
   </component>
 </project>

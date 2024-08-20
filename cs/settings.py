@@ -194,18 +194,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'app01/static/media/')
 
 PERMISSIONS = {
     "user": {
-       "document": ["GET", ],
+       "documents": ["GET", ],
 
     },
     "admin": {
-        "document": ["GET", "DELETE"],
+        "documents": ["GET", "DELETE"],
         "userList": ["GET"],
         "banList": ["GET，POST，DELETE"],
         "search": ["GET"]
     },
 
     "root": {
-        "document": ["GET", "DELETE"],
+        "documents": ["GET", "DELETE"],
         "userList": ["GET", "POST", "PATCH"],
         "banList": ["GET", "POST", "DELETE"],
         "search": ["GET"]
